@@ -1,0 +1,6 @@
+name: SecretLife
+version: '${project.version}'
+main: me.zombi42.secretlife.SecretLife
+api-version: '1.20'
+commands:
+  dispersesecrets:

@@ -1,0 +1,7 @@
+#This will make it so it will play the totem of undying animation when secrets are given out.
+#THIS DOES NOT CHANGE THE LOOK OR THE SOUND OF THE ANIMATION
+#That is done using resourcepacks and not part of this plugin.
+#
+#This is simply here incase somebody wants to do that on their own
+#Default is false.
+Animation: false
