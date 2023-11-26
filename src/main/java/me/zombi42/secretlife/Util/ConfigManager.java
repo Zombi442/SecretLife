@@ -10,31 +10,99 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+
 
 public class ConfigManager {
 
-
-    Button successButton = null;
-    Button failButton = null;
-    Button hardButton = null;
     SecretLife secretLife;
     YamlConfiguration secretConfig;
     YamlConfiguration settingsConfig;
+    YamlConfiguration livesConfig;
     File secretFile;
     File settingsFile;
+    File livesFile;
     Location itemDropLocation;
+    Button successButton = null;
+    Button failButton = null;
+    Button hardButton = null;
+    Map<String, Integer> lives = new HashMap<>();
 
     public ConfigManager(SecretLife secretLife) {
         secretFile = new File(secretLife.getDataFolder() + "/secrets.yml");
         settingsFile = new File(secretLife.getDataFolder() + "/Settings.yml");
+        livesFile = new File(secretLife.getDataFolder() + "/Lives.yml");
         this.secretLife = secretLife;
 
         initialize(secretLife);
 
+    }
+
+    private void initialize(SecretLife secretLife) {
+        if (!secretFile.exists()) {
+            secretLife.saveResource("Secrets.yml", false);
+        }
+        if (!settingsFile.exists()) {
+            secretLife.saveResource("Settings.yml", false);
+        }
+        if (!livesFile.exists()) {
+            secretLife.saveResource("Lives.yml", false);
+        }
+
+        settingsConfig = YamlConfiguration.loadConfiguration(settingsFile);
+        secretConfig = YamlConfiguration.loadConfiguration(secretFile);
+        livesConfig = YamlConfiguration.loadConfiguration(livesFile);
+
+        Map<String, Object> map = livesConfig.getConfigurationSection("Lives.").getValues(false);
+
+        for (String string : map.keySet()) {
+            if (Bukkit.getPlayer(string) != null) {
+                try {
+
+                    this.lives.put(string, (Integer) map.get(string));
+                } catch (ClassCastException e) {
+                    Bukkit.getLogger().warning("Found non integer values in Lives.yml");
+                }
+            }
+        }
+
+        Button success = getLocation(ButtonType.Success);
+        Button hard = getLocation(ButtonType.Hard);
+        Button fail = getLocation(ButtonType.Fail);
+        Location items = getLocation("itemDropLocation");
+
+        if (success != null) {
+            successButton = success;
+        }
+        if (hard != null) {
+            hardButton = hard;
+        }
+        if (fail != null) {
+            failButton = fail;
+        }
+        if (items != null) {
+            this.itemDropLocation = items;
+        }
+
+
+    }
+
+    public void saveConfig() {
+
+        saveLocation(this.itemDropLocation, "itemDropLocation");
+        saveLocation(failButton);
+        saveLocation(successButton);
+        saveLocation(hardButton);
+        saveLives();
+
+
+        Bukkit.getLogger().info("Saved Config!");
     }
 
     public YamlConfiguration getSettingsConfig() {
@@ -63,6 +131,9 @@ public class ConfigManager {
 
     public void saveLocation(Button button) {
 
+        if(button == null){
+            return;
+        }
         settingsConfig.set("Locations." + button.getButtonType().toString() + ".x", button.getX());
         settingsConfig.set("Locations." + button.getButtonType().toString() + ".y", button.getY());
         settingsConfig.set("Locations." + button.getButtonType().toString() + ".z", button.getZ());
@@ -107,6 +178,7 @@ public class ConfigManager {
 
     }
 
+
     public void removeLocation(ButtonType buttonType) {
 
         settingsConfig.set("Locations." + buttonType.toString(), null);
@@ -132,46 +204,11 @@ public class ConfigManager {
     }
 
 
-
-    private void initialize(SecretLife secretLife) {
-        if (!secretFile.exists()) {
-            secretLife.saveResource("Secrets.yml", false);
-        }
-        if (!settingsFile.exists()) {
-            secretLife.saveResource("Settings.yml", false);
-        }
-
-        settingsConfig = YamlConfiguration.loadConfiguration(settingsFile);
-        secretConfig = YamlConfiguration.loadConfiguration(secretFile);
-
-
-        Button success = getLocation(ButtonType.Success);
-        Button hard = getLocation(ButtonType.Hard);
-        Button fail = getLocation(ButtonType.Fail);
-        Location items = getLocation("itemDropLocation");
-
-        if (success != null) {
-            successButton = success;
-        }
-        if (hard != null) {
-            hardButton = hard;
-        }
-        if (fail != null) {
-            failButton = fail;
-        }
-        if (items != null) {
-            this.itemDropLocation = items;
-        }
-
-
-    }
-
     public Location getItemDropLocation() {
         return itemDropLocation;
     }
 
     public void setItemDropLocation(Location itemDropLocation) {
-        saveLocation(itemDropLocation, "itemDropLocation");
         this.itemDropLocation = itemDropLocation;
     }
 
@@ -189,11 +226,11 @@ public class ConfigManager {
     }
 
     public Button getButton(String buttonType) {
-       return getButton(ButtonType.valueOf(buttonType));
+        return getButton(ButtonType.valueOf(buttonType));
     }
 
 
-    public void setButton(Button button){
+    public void setButton(Button button) {
         switch (button.getButtonType()) {
             case Fail:
                 failButton = button;
@@ -204,5 +241,32 @@ public class ConfigManager {
         }
     }
 
+
+    void saveLives(){
+        for(String string : lives.keySet()){
+            livesConfig.set("Lives." + string, lives.get(string));
+        }
+
+        try {
+            livesConfig.save(livesFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public int getLives(Player player) {
+        return lives.get(player.getName());
+    }
+
+    public void setLives(Player player, int lives) {
+        this.lives.put(player.getName(), lives);
+    }
+
+    public boolean livesContainsKey(Player player){
+        if(lives.get(player.getName()) == null){
+            return false;
+        }
+        return true;
+    }
 
 }

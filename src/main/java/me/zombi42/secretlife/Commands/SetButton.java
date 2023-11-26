@@ -5,10 +5,10 @@ https://github.com/Zombi442
  */
 package me.zombi42.secretlife.Commands;
 
+import me.zombi42.secretlife.SecretLife;
 import me.zombi42.secretlife.Util.Button;
 import me.zombi42.secretlife.Util.ButtonType;
 import me.zombi42.secretlife.Util.ConfigManager;
-import me.zombi42.secretlife.SecretLife;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -53,7 +53,7 @@ public class SetButton implements CommandExecutor {
 
     }
 
-    void sendUsage(Player player){
+    void sendUsage(Player player) {
         player.sendMessage(ChatColor.RED + "/setbutton [success/hard/fail]");
     }
 
@@ -73,7 +73,7 @@ public class SetButton implements CommandExecutor {
             return true;
         }
 
-        if(args.length == 0){
+        if (args.length == 0) {
             sendUsage(player);
             return true;
         }
@@ -82,7 +82,7 @@ public class SetButton implements CommandExecutor {
 
         String argument0 = args[0].toLowerCase();
 
-        switch (argument0){
+        switch (argument0) {
             case "success":
                 continueC = true;
             case "hard":
@@ -91,7 +91,7 @@ public class SetButton implements CommandExecutor {
                 continueC = true;
         }
 
-        if(!continueC){
+        if (!continueC) {
             sendUsage(player);
             return true;
         }
@@ -102,14 +102,12 @@ public class SetButton implements CommandExecutor {
         ButtonType buttonType = ButtonType.valueOf(argument0);
 
 
-        if(configManager.getButton(buttonType) != null){
-                configManager.removeLocation(buttonType);
-                player.sendMessage(ChatColor.RED + "This button is no longer registered to " + buttonType);
-            }
+        if (configManager.getButton(buttonType) != null) {
+            player.sendMessage(ChatColor.RED + "This button is no longer registered to " + buttonType);
+        }
 
         Button button = new Button(blockLocation, buttonType);
 
-        configManager.saveLocation(button);
         configManager.setButton(button);
 
         player.sendMessage(ChatColor.GREEN + "Registered this button to " + button);
