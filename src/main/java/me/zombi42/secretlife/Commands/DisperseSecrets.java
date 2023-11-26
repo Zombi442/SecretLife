@@ -5,24 +5,16 @@ https://github.com/Zombi442
  */
 package me.zombi42.secretlife.Commands;
 
-import me.zombi42.secretlife.ConfigManager;
+import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.SecretLife;
 import me.zombi42.secretlife.Tasks.GiveBook;
 import me.zombi42.secretlife.Tasks.ShowTitleLater;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 
 public class DisperseSecrets implements CommandExecutor {
 
@@ -52,8 +44,9 @@ public class DisperseSecrets implements CommandExecutor {
             new ShowTitleLater(player1, "3").runTaskLater(plugin, 100);
             new ShowTitleLater(player1, "2").runTaskLater(plugin, 140);
             new ShowTitleLater(player1, "1").runTaskLater(plugin, 180);
-            new GiveBook(player1, configManager).runTaskLater(plugin,200);
-//            new GiveBook(player1, configManager).runTaskLater(plugin,0);
+            //TODO: fix this
+//            new GiveBook(player1, configManager).runTaskLater(plugin,200);
+            new GiveBook(player1, configManager).runTaskLater(plugin,0);
 
         }
 

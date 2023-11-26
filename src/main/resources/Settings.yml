@@ -5,3 +5,8 @@
 #This is simply here incase somebody wants to do that on their own
 #Default is false.
 Animation: false
+
+
+#Dont touch the stuff below this point
+#Its basically just the location of the buttons
+Locations:

@@ -5,8 +5,7 @@ https://github.com/Zombi442
  */
 package me.zombi42.secretlife.Tasks;
 
-import me.zombi42.secretlife.ConfigManager;
-import org.bukkit.Bukkit;
+import me.zombi42.secretlife.Util.ConfigManager;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,19 +31,23 @@ public class GiveBook extends BukkitRunnable {
 
 
         String path = "Players." + player.getDisplayName();
-        String page = "Could not get player name from config. Report this error! This is not a task!";
+        String pageContent = "Could not get player name from config. \n Report this error! This is not a task!";
 
         YamlConfiguration yamlConfiguration = configManager.getSecretConfiguration();
         if(yamlConfiguration.get(path) != null){
-            page = yamlConfiguration.get(path).toString();
+            pageContent = yamlConfiguration.get(path).toString();
         }
+
+
         bookMeta.setTitle(player.getDisplayName() + "'s Secret Task");
-        bookMeta.setAuthor("Task Master");
-        bookMeta.setPages(page);
+        bookMeta.setAuthor("Secret Keeper");
+        bookMeta.addPage(pageContent);
+
+
         writtenBook.setItemMeta(bookMeta);
         player.getInventory().addItem(writtenBook);
 
-        if(configManager.getConfig().getBoolean("Animation")){
+        if(configManager.getSettingsConfig().getBoolean("Animation")){
             player.playEffect(EntityEffect.TOTEM_RESURRECT);
         }
 
