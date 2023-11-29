@@ -6,7 +6,7 @@
 
     <groupId>me.Zombi42</groupId>
     <artifactId>SecretLife</artifactId>
-    <version>1.0</version>
+    <version>0.6</version>
     <packaging>jar</packaging>
 
     <name>SecretLife</name>
