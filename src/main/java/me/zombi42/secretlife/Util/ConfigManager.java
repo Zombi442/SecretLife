@@ -55,6 +55,7 @@ public class ConfigManager {
     }
 
     private void initialize(SecretLife secretLife) {
+        this.secretLife = secretLife;
         if (!secretFile.exists()) {
             secretLife.saveResource("Secrets.yml", false);
         }
@@ -69,6 +70,22 @@ public class ConfigManager {
         secretConfig = YamlConfiguration.loadConfiguration(secretFile);
         livesConfig = YamlConfiguration.loadConfiguration(livesFile);
 
+        loadConfig();
+    }
+
+    public void saveConfig() {
+
+        saveLocation(this.itemDropLocation, "itemDropLocation");
+        saveButton(failButton);
+        saveButton(successButton);
+        saveButton(hardButton);
+        saveLives();
+
+
+        Bukkit.getLogger().info("Saved Config!");
+    }
+
+    public void loadConfig() {
         Map<String, Object> map = livesConfig.getConfigurationSection("Lives.").getValues(false);
 
         for (String string : map.keySet()) {
@@ -99,20 +116,6 @@ public class ConfigManager {
         if (items != null) {
             this.itemDropLocation = items;
         }
-
-
-    }
-
-    public void saveConfig() {
-
-        saveLocation(this.itemDropLocation, "itemDropLocation");
-        saveLocation(failButton);
-        saveLocation(successButton);
-        saveLocation(hardButton);
-        saveLives();
-
-
-        Bukkit.getLogger().info("Saved Config!");
     }
 
     public YamlConfiguration getSettingsConfig() {
@@ -122,7 +125,6 @@ public class ConfigManager {
     public YamlConfiguration getSecretConfiguration() {
         return this.secretConfig;
     }
-
 
     public void saveLocation(Location location, String locationName) {
 
@@ -141,19 +143,11 @@ public class ConfigManager {
 
     public void saveLocation(Button button) {
 
-        if(button == null){
+        if (button == null) {
             return;
         }
-        settingsConfig.set("Locations." + button.getButtonType().toString() + ".x", button.getX());
-        settingsConfig.set("Locations." + button.getButtonType().toString() + ".y", button.getY());
-        settingsConfig.set("Locations." + button.getButtonType().toString() + ".z", button.getZ());
-        settingsConfig.set("Locations." + button.getButtonType().toString() + ".world", button.getWorld().getUID().toString());
 
-        try {
-            settingsConfig.save(settingsFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveLocation(button.getLocation(), button.getButtonType().toString());
     }
 
     public Location getLocation(String locationName) {
@@ -162,9 +156,9 @@ public class ConfigManager {
             return null;
         }
 
-        Double X = settingsConfig.getDouble("Locations." + locationName + ".x");
-        Double Y = settingsConfig.getDouble("Locations." + locationName + ".y");
-        Double Z = settingsConfig.getDouble("Locations." + locationName + ".z");
+        double X = settingsConfig.getDouble("Locations." + locationName + ".x");
+        double Y = settingsConfig.getDouble("Locations." + locationName + ".y");
+        double Z = settingsConfig.getDouble("Locations." + locationName + ".z");
         String worldUUIDString = String.valueOf(settingsConfig.get("Locations." + locationName + ".world"));
         UUID worldUUID = UUID.fromString(worldUUIDString);
         World world = Bukkit.getWorld(worldUUID);
@@ -173,25 +167,12 @@ public class ConfigManager {
     }
 
     public Button getLocation(ButtonType buttonType) {
-        if (settingsConfig.get("Locations." + buttonType.toString()) == null) {
-            return null;
-        }
-
-        Double X = settingsConfig.getDouble("Locations." + buttonType + ".x");
-        Double Y = settingsConfig.getDouble("Locations." + buttonType + ".y");
-        Double Z = settingsConfig.getDouble("Locations." + buttonType + ".z");
-        String worldUUIDString = String.valueOf(settingsConfig.get("Locations." + buttonType + ".world"));
-        UUID worldUUID = UUID.fromString(worldUUIDString);
-        World world = Bukkit.getWorld(worldUUID);
-
-        return new Button(world, X, Y, Z, buttonType);
-
+        return getLocation(buttonType);
     }
-
 
     public void removeLocation(ButtonType buttonType) {
 
-        settingsConfig.set("Locations." + buttonType.toString(), null);
+        settingsConfig.set("Locations." + buttonType, null);
 
         try {
             settingsConfig.save(settingsFile);
@@ -213,13 +194,16 @@ public class ConfigManager {
 
     }
 
-
     public Location getItemDropLocation() {
         return itemDropLocation;
     }
 
     public void setItemDropLocation(Location itemDropLocation) {
         this.itemDropLocation = itemDropLocation;
+    }
+
+    void saveButton(Button button) {
+        saveLocation(button);
     }
 
     public Button getButton(ButtonType buttonType) {
@@ -251,9 +235,8 @@ public class ConfigManager {
         }
     }
 
-
-    void saveLives(){
-        for(String string : lives.keySet()){
+    void saveLives() {
+        for (String string : lives.keySet()) {
             livesConfig.set("Lives." + string, lives.get(string));
         }
 
@@ -264,6 +247,7 @@ public class ConfigManager {
         }
 
     }
+
     public int getLives(Player player) {
         return lives.get(player.getName());
     }
@@ -272,11 +256,8 @@ public class ConfigManager {
         this.lives.put(player.getName(), lives);
     }
 
-    public boolean livesContainsKey(Player player){
-        if(lives.get(player.getName()) == null){
-            return false;
-        }
-        return true;
+    public boolean livesContainsKey(Player player) {
+        return lives.get(player.getName()) != null;
     }
 
 }
