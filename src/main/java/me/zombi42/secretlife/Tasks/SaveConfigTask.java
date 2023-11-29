@@ -15,6 +15,7 @@ If not, see <https://www.gnu.org/licenses/>.
 package me.zombi42.secretlife.Tasks;
 
 import me.zombi42.secretlife.Util.ConfigManager;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SaveConfigTask extends BukkitRunnable {
@@ -29,6 +30,7 @@ public class SaveConfigTask extends BukkitRunnable {
     @Override
     public void run() {
         configManager.saveConfig();
+        Bukkit.getLogger().info("Saved Config!");
 
     }
 }

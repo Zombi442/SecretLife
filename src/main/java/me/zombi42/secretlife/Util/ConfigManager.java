@@ -81,8 +81,6 @@ public class ConfigManager {
         saveButton(hardButton);
         saveLives();
 
-
-        Bukkit.getLogger().info("Saved Config!");
     }
 
     public void loadConfig() {
@@ -167,7 +165,9 @@ public class ConfigManager {
     }
 
     public Button getLocation(ButtonType buttonType) {
-        return getLocation(buttonType);
+       Location location = getLocation(buttonType.toString());
+
+        return new Button(location, buttonType);
     }
 
     public void removeLocation(ButtonType buttonType) {
