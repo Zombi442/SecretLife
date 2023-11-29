@@ -12,28 +12,11 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with SecretLife.
 If not, see <https://www.gnu.org/licenses/>.
  */
-package me.zombi42.secretlife.Tasks;
+package me.zombi42.secretlife.Enum;
 
-
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-public class ShowTitleLater extends BukkitRunnable {
-
-
-    String messageToDisplay;
-    Player player;
-
-    public ShowTitleLater(Player player, String messageToDisplay) {
-        this.messageToDisplay = messageToDisplay;
-        this.player = player;
-
-    }
-
-    @Override
-    public void run() {
-
-            player.sendTitle("", ChatColor.RED + messageToDisplay, 20, 40, 2);
-    }
+public enum TeamEnum {
+    Green,
+    Yellow,
+    Red,
+    None
 }

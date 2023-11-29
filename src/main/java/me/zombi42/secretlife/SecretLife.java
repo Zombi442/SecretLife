@@ -1,13 +1,17 @@
 /*
-
-SecretLife © 2023 by Zombi42 is licensed under CC BY-NC-SA 4.0.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+This file is part of SecretLife.
 https://github.com/Zombi442
 
-I do not know how licenses work. Help me.
+SecretLife is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+SecretLife is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with SecretLife.
+If not, see <https://www.gnu.org/licenses/>.
  */
-
-
 package me.zombi42.secretlife;
 
 import me.zombi42.secretlife.Commands.DisperseSecrets;
