@@ -19,8 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SaveConfigTask extends BukkitRunnable {
-
-
     ConfigManager configManager;
 
     public SaveConfigTask(ConfigManager configManager) {

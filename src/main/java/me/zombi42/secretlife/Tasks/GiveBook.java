@@ -27,9 +27,12 @@ public class GiveBook extends BukkitRunnable {
 
     Player player;
     ConfigManager configManager;
-    public GiveBook(Player player, ConfigManager configManager) {
+    boolean animationBypass;
+
+    public GiveBook(Player player, ConfigManager configManager, boolean animationBypass) {
         this.player = player;
         this.configManager = configManager;
+        this.animationBypass = animationBypass;
     }
 
     @Override
@@ -37,7 +40,6 @@ public class GiveBook extends BukkitRunnable {
 
         ItemStack writtenBook = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookMeta = (BookMeta) writtenBook.getItemMeta();
-
 
         String path = "Players." + player.getDisplayName();
         String pageContent = "Could not get player name from config. \n Report this error! This is not a task!";
@@ -56,7 +58,7 @@ public class GiveBook extends BukkitRunnable {
         writtenBook.setItemMeta(bookMeta);
         player.getInventory().addItem(writtenBook);
 
-        if(configManager.getSettingsConfig().getBoolean("Animation")){
+        if(configManager.getSettingsConfig().getBoolean("Animation") && !animationBypass){
             player.playEffect(EntityEffect.TOTEM_RESURRECT);
         }
 

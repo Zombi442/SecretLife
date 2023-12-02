@@ -24,14 +24,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetItemDrop implements CommandExecutor {
+public class CommandSetItemdrop implements CommandExecutor {
 
 
     SecretLife secretLife;
     ConfigManager configManager;
 
 
-    public SetItemDrop(SecretLife secretLife, ConfigManager configManager) {
+    public CommandSetItemdrop(SecretLife secretLife, ConfigManager configManager) {
         this.secretLife = secretLife;
         this.configManager = configManager;
 

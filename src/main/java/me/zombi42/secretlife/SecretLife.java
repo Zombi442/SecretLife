@@ -14,13 +14,8 @@ If not, see <https://www.gnu.org/licenses/>.
  */
 package me.zombi42.secretlife;
 
-import me.zombi42.secretlife.Commands.DisperseSecrets;
-import me.zombi42.secretlife.Commands.SetButton;
-import me.zombi42.secretlife.Commands.SetItemDrop;
-import me.zombi42.secretlife.Commands.SetLives;
-import me.zombi42.secretlife.Listeners.ButtonPress;
-import me.zombi42.secretlife.Listeners.Damage;
-import me.zombi42.secretlife.Listeners.PlayerDeath;
+import me.zombi42.secretlife.Commands.*;
+import me.zombi42.secretlife.Listeners.*;
 import me.zombi42.secretlife.Tasks.SaveConfigTask;
 import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.Util.DropManager;
@@ -33,6 +28,7 @@ public final class SecretLife extends JavaPlugin {
     ConfigManager configManager;
     DropManager dropManager;
     TeamManager teamManager;
+    public String version = "0.6";
 
     @Override
     public void onEnable() {
@@ -41,10 +37,11 @@ public final class SecretLife extends JavaPlugin {
         configManager = new ConfigManager(this);
         teamManager = new TeamManager(this);
 
-        new DisperseSecrets(this, configManager);
-        new SetButton(this, configManager);
-        new SetItemDrop(this, configManager);
-        new SetLives(this, teamManager ,configManager);
+        new CommandDisperseSecrets(this, configManager);
+        new CommandSetButton(this, configManager);
+        new CommandSetItemdrop(this, configManager);
+        new CommandSetLives(this, teamManager ,configManager);
+        new CommandSecretLife(this, configManager);
 
         Bukkit.getServer().getPluginManager().registerEvents(new Damage(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ButtonPress(configManager, dropManager), this);

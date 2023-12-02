@@ -16,6 +16,7 @@ package me.zombi42.secretlife.Tasks;
 
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -24,16 +25,20 @@ public class ShowTitleLater extends BukkitRunnable {
 
     String messageToDisplay;
     Player player;
+    boolean tick;
 
-    public ShowTitleLater(Player player, String messageToDisplay) {
+    public ShowTitleLater(Player player, String messageToDisplay, boolean sound) {
         this.messageToDisplay = messageToDisplay;
         this.player = player;
+        this.tick = sound;
 
     }
 
     @Override
     public void run() {
-
-            player.sendTitle("", ChatColor.RED + messageToDisplay, 20, 40, 2);
+            player.sendTitle( ChatColor.RED + messageToDisplay, "", 20, 40, 2);
+            if(tick){
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 100, 1);
+            }
     }
 }

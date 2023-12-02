@@ -23,15 +23,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetLives implements CommandExecutor {
+public class CommandSetLives implements CommandExecutor {
 
 
     SecretLife secretLife;
     TeamManager teamManager;
-
     ConfigManager configManager;
 
-    public SetLives(SecretLife secretLife, TeamManager teamManager, ConfigManager configManager) {
+    public CommandSetLives(SecretLife secretLife, TeamManager teamManager, ConfigManager configManager) {
         this.secretLife = secretLife;
         this.teamManager = teamManager;
         this.configManager = configManager;
@@ -51,8 +50,6 @@ public class SetLives implements CommandExecutor {
         Player player = (Player) sender;
 
         configManager.setLives(player, Integer.parseInt(args[0]));
-
-
 
         return true;
     }

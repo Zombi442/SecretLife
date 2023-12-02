@@ -34,8 +34,6 @@ public class Damage implements Listener {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getHealth() - event.getFinalDamage());
         }
     }
-
-
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (event.getRespawnReason() == PlayerRespawnEvent.RespawnReason.END_PORTAL) {

@@ -14,8 +14,8 @@ If not, see <https://www.gnu.org/licenses/>.
  */
 package me.zombi42.secretlife.Listeners;
 
-import me.zombi42.secretlife.Util.Button;
 import me.zombi42.secretlife.Enum.ButtonType;
+import me.zombi42.secretlife.Util.Button;
 import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.Util.DropManager;
 import org.bukkit.Location;
@@ -32,8 +32,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class ButtonPress implements Listener {
-
-
     ConfigManager configManager;
 
     DropManager dropManager;
@@ -70,12 +68,21 @@ public class ButtonPress implements Listener {
 
         Button button = null;
 
-        for(ButtonType buttonType : ButtonType.values()){
-            if(configManager.getButton(buttonType).getLocation().equals(location)){
-                button = configManager.getButton(buttonType);
-                break;
+
+        for (ButtonType buttonType : ButtonType.values()) {
+            Button button1 = configManager.getButton(buttonType);
+            if (button1 != null) {
+                if (button1.getLocation().equals(location)) {
+                    button = configManager.getButton(buttonType);
+                    break;
+                }
             }
         }
+
+        if (button == null) {
+            return;
+        }
+
 
         if (button.getButtonType() == ButtonType.Success) {
 

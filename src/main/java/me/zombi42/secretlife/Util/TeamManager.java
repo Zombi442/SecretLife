@@ -35,7 +35,6 @@ public class TeamManager {
 
         this.secretLife = secretLife;
 
-
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         board = manager.getMainScoreboard();
         if(board.getTeam("Green") == null){

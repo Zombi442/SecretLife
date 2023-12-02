@@ -25,14 +25,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class DisperseSecrets implements CommandExecutor {
-
-
+public class CommandDisperseSecrets implements CommandExecutor {
 
     String name;
     SecretLife plugin;
     ConfigManager configManager;
-    public DisperseSecrets(SecretLife plugin, ConfigManager configManager) {
+    public CommandDisperseSecrets(SecretLife plugin, ConfigManager configManager) {
         this.plugin = plugin;
         this.configManager = configManager;
 
@@ -42,24 +40,38 @@ public class DisperseSecrets implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return false;
+        Player player = null;
+        Boolean isPlayer = false;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+            isPlayer = true;
         }
 
-        Player player = (Player) sender;
-
-        for(Player player1 : Bukkit.getOnlinePlayers()){
-           player1.sendTitle("", ChatColor.RED + "Dispersing your secrets shortly..", 10, 100, 20);
-            new ShowTitleLater(player1, "3").runTaskLater(plugin, 100);
-            new ShowTitleLater(player1, "2").runTaskLater(plugin, 140);
-            new ShowTitleLater(player1, "1").runTaskLater(plugin, 180);
-            //TODO: fix this
+        if(args.length == 0) {
+            for(Player player1 : Bukkit.getOnlinePlayers()){
+                player1.sendTitle( ChatColor.RED + "Your task is...","", 10, 100, 20);
+                new ShowTitleLater(player1, "3", true).runTaskLater(plugin, 100);
+                new ShowTitleLater(player1, "2", true).runTaskLater(plugin, 140);
+                new ShowTitleLater(player1, "1", true).runTaskLater(plugin, 180);
+                //TODO: fix this
 //            new GiveBook(player1, configManager).runTaskLater(plugin,200);
-            new GiveBook(player1, configManager).runTaskLater(plugin,0);
+                new GiveBook(player1, configManager, false).runTaskLater(plugin,0);
 
+            }
+
+            return true;
         }
 
+
+        if(Bukkit.getPlayer(args[0]) == null){
+            player.sendMessage(ChatColor.RED + "Could not find the player named " + args[0]);
+            return true;
+        }
+
+        Player player1 = Bukkit.getPlayer(args[0]);
+        new GiveBook(player1, configManager, true).run();
         return true;
+
     }
 
 }

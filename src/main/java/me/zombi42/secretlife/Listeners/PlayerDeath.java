@@ -38,7 +38,6 @@ public class PlayerDeath implements Listener {
         this.teamManager = teamManager;
     }
 
-
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();

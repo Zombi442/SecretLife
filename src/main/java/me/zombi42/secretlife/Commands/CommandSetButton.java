@@ -33,12 +33,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetButton implements CommandExecutor {
+public class CommandSetButton implements CommandExecutor {
 
     SecretLife secretLife;
     ConfigManager configManager;
 
-    public SetButton(SecretLife secretLife, ConfigManager configManager) {
+    public CommandSetButton(SecretLife secretLife, ConfigManager configManager) {
         this.configManager = configManager;
         this.secretLife = secretLife;
 
