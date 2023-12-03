@@ -8,5 +8,6 @@ Animation: false
 
 
 #Dont touch the stuff below this point
-#Its basically just the location of the buttons
+#Its basically just the location of various things
+#Buttons, ItemDrops, etc
 Locations:

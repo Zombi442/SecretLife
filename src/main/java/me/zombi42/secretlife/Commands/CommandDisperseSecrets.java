@@ -53,7 +53,7 @@ public class CommandDisperseSecrets implements CommandExecutor {
                 new ShowTitleLater(player1, "3", true).runTaskLater(plugin, 100);
                 new ShowTitleLater(player1, "2", true).runTaskLater(plugin, 140);
                 new ShowTitleLater(player1, "1", true).runTaskLater(plugin, 180);
-                //TODO: fix this
+                //fixme: before release
 //            new GiveBook(player1, configManager).runTaskLater(plugin,200);
                 new GiveBook(player1, configManager, false).runTaskLater(plugin,0);
 

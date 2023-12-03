@@ -34,20 +34,22 @@ public class ConfigManager {
     SecretLife secretLife;
     YamlConfiguration secretConfig;
     YamlConfiguration settingsConfig;
-    YamlConfiguration livesConfig;
+    YamlConfiguration playerConfig;
     File secretFile;
     File settingsFile;
-    File livesFile;
+    File playerConfigFile;
     Location itemDropLocation;
     Button successButton = null;
     Button failButton = null;
     Button hardButton = null;
     Map<String, Integer> lives = new HashMap<>();
+    Map<String, Boolean> gifts = new HashMap<>();
+    boolean enabled;
 
     public ConfigManager(SecretLife secretLife) {
         secretFile = new File(secretLife.getDataFolder() + "/secrets.yml");
         settingsFile = new File(secretLife.getDataFolder() + "/Settings.yml");
-        livesFile = new File(secretLife.getDataFolder() + "/Lives.yml");
+        playerConfigFile = new File(secretLife.getDataFolder() + "/Players.yml");
         this.secretLife = secretLife;
 
         initialize(secretLife);
@@ -62,13 +64,9 @@ public class ConfigManager {
         if (!settingsFile.exists()) {
             secretLife.saveResource("Settings.yml", false);
         }
-        if (!livesFile.exists()) {
-            secretLife.saveResource("Lives.yml", false);
+        if (!playerConfigFile.exists()) {
+            secretLife.saveResource("Players.yml", false);
         }
-
-        settingsConfig = YamlConfiguration.loadConfiguration(settingsFile);
-        secretConfig = YamlConfiguration.loadConfiguration(secretFile);
-        livesConfig = YamlConfiguration.loadConfiguration(livesFile);
 
         loadConfig();
     }
@@ -80,10 +78,11 @@ public class ConfigManager {
         saveButton(successButton);
         saveButton(hardButton);
         saveLives();
+        saveGifts();
 
     }
 
-    public void saveLocation(Location location, String locationName) {
+    void saveLocation(Location location, String locationName) {
 
         settingsConfig.set("Locations." + locationName + ".x", location.getX());
         settingsConfig.set("Locations." + locationName + ".y", location.getY());
@@ -98,7 +97,7 @@ public class ConfigManager {
         }
     }
 
-    public void saveLocation(Button button) {
+    void saveLocation(Button button) {
 
         if (button == null) {
             return;
@@ -108,12 +107,12 @@ public class ConfigManager {
     }
 
     void saveLives() {
-        for (String string : lives.keySet()) {
-            livesConfig.set("Lives." + string, lives.get(string));
+        for (String playerName : lives.keySet()) {
+            playerConfig.set("Lives." + playerName, lives.get(playerName));
         }
 
         try {
-            livesConfig.save(livesFile);
+            playerConfig.save(playerConfigFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -124,18 +123,35 @@ public class ConfigManager {
         saveLocation(button);
     }
 
-    public void loadConfig() {
-        Map<String, Object> map = livesConfig.getConfigurationSection("Lives.").getValues(false);
+    void saveGifts() {
+        for (String playername : gifts.keySet()) {
+            playerConfig.set(playername + ".gited", gifts.get(playername));
+        }
 
+        try {
+            playerConfig.save(playerConfigFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void loadConfig() {
+        settingsConfig = YamlConfiguration.loadConfiguration(settingsFile);
+        secretConfig = YamlConfiguration.loadConfiguration(secretFile);
+        playerConfig = YamlConfiguration.loadConfiguration(playerConfigFile);
+
+        Map<String, Object> map = playerConfig.getConfigurationSection("Lives.").getValues(false);
         for (String string : map.keySet()) {
-            if (Bukkit.getPlayer(string) != null) {
-                try {
-                    this.lives.put(string, (Integer) map.get(string));
-                } catch (ClassCastException e) {
-                    Bukkit.getLogger().warning("Found non integer values in Lives.yml");
-                }
+
+            try {
+                this.lives.put(string, Integer.parseInt(String.valueOf(map.get(string))));
+            } catch (NumberFormatException e) {
+                Bukkit.getLogger().warning("Found non integer values in Players.yml");
             }
         }
+
+
 
         Button success = getLocation(ButtonType.Success);
         Button hard = getLocation(ButtonType.Hard);
@@ -154,6 +170,7 @@ public class ConfigManager {
         if (items != null) {
             this.itemDropLocation = items;
         }
+
     }
 
     public YamlConfiguration getSettingsConfig() {
@@ -164,8 +181,8 @@ public class ConfigManager {
         return this.secretConfig;
     }
 
-    public YamlConfiguration getLivesConfig() {
-        return this.livesConfig;
+    public YamlConfiguration getPlayerConfig() {
+        return this.playerConfig;
     }
 
     public Location getLocation(String locationName) {
@@ -248,7 +265,7 @@ public class ConfigManager {
         saveButton(button);
     }
 
-    public int getLives(Player player) {
+    public Integer getLives(Player player) {
         return lives.get(player.getName());
     }
 
@@ -258,7 +275,16 @@ public class ConfigManager {
     }
 
     public boolean livesContainsKey(Player player) {
-        return lives.get(player.getName()) != null;
+        return lives.containsKey(player.getName());
+    }
+
+    public Boolean getGift(Player player) {
+        return gifts.get(player.getName());
+    }
+
+    public void setGift(Player player, boolean gifted) {
+        gifts.put(player.getName(), gifted);
+        saveGifts();
     }
 
 }

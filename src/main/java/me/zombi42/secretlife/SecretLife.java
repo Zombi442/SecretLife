@@ -33,8 +33,8 @@ public final class SecretLife extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        dropManager = new DropManager();
         configManager = new ConfigManager(this);
+        dropManager = new DropManager();
         teamManager = new TeamManager(this);
 
         new CommandDisperseSecrets(this, configManager);
@@ -42,12 +42,13 @@ public final class SecretLife extends JavaPlugin {
         new CommandSetItemdrop(this, configManager);
         new CommandSetLives(this, teamManager ,configManager);
         new CommandSecretLife(this, configManager);
+        new CommandGift(this, configManager);
 
         Bukkit.getServer().getPluginManager().registerEvents(new Damage(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ButtonPress(configManager, dropManager), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeath(configManager, teamManager), this);
 
-        new SaveConfigTask(configManager).runTaskTimer(this, 12000, 12000);
+//        new SaveConfigTask(configManager).runTaskTimer(this, 12000, 12000);
 
     }
 

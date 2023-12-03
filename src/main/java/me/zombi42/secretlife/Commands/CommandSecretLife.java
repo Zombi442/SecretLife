@@ -82,7 +82,11 @@ public class CommandSecretLife implements CommandExecutor {
                     player.sendMessage(ChatColor.GREEN + "Saved Config!");
                     break;
                 case "reload":
-                    player.sendMessage(ChatColor.RED + "Warning, this will overwrite any unsaved data on the server. Type [/secretlife reload confirm], to confirm");
+                    if (isPlayer) {
+                        player.sendMessage(ChatColor.RED + "Warning, this will overwrite any unsaved data on the server. Type [/secretlife reload confirm], to confirm");
+                    } else {
+                        Bukkit.getLogger().info("Warning, this will overwrite any unsaved data on the server. Type [/secretlife reload confirm], to confirm");
+                    }
                     break;
                 case "info":
                     if (isPlayer) {
@@ -97,10 +101,13 @@ public class CommandSecretLife implements CommandExecutor {
         } else if (args.length == 2) {
             if (args[0].equals("reload") & args[1].equals("confirm")) {
                 configManager.loadConfig();
-                player.sendMessage(ChatColor.GREEN + "Loaded Config!");
+                if (isPlayer) {
+                    player.sendMessage(ChatColor.GREEN + "Loaded Config!");
+                } else {
+                    Bukkit.getLogger().info("Loaded Config!");
+                }
             }
         }
-
         return true;
     }
 

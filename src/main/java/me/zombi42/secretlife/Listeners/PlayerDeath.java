@@ -63,13 +63,15 @@ public class PlayerDeath implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (!configManager.livesContainsKey(player)) {
-            Bukkit.getLogger().info(String.valueOf(configManager.livesContainsKey(player)));
             configManager.setLives(player, 3);
             teamManager.addPlayerToTeam(player, TeamEnum.Green);
             return;
         }
 
-        switch (configManager.getLives(player)) {
+
+        int lives = configManager.getLives(player);
+
+        switch (lives) {
             case 3:
                 teamManager.addPlayerToTeam(player, TeamEnum.Green);
                 break;
