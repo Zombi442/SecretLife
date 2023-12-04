@@ -19,13 +19,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
-
 import java.util.*;
 
 public class DropManager {
 
 
-    public List<ItemStack> drop(Double amountToGive) {
+    public List<ItemStack> getItems(Double amountToGive) {
 
         if (amountToGive <= 0 || amountToGive >= 21) {
             throw new IllegalArgumentException("Integer Must be a value between 1 and 20");

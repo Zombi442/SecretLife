@@ -14,8 +14,8 @@ If not, see <https://www.gnu.org/licenses/>.
  */
 package me.zombi42.secretlife.Commands;
 
-import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.SecretLife;
+import me.zombi42.secretlife.Util.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -25,8 +25,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandSetItemdrop implements CommandExecutor {
-
-
     SecretLife secretLife;
     ConfigManager configManager;
 
@@ -41,10 +39,9 @@ public class CommandSetItemdrop implements CommandExecutor {
     }
 
 
-    void sendUsage(Player player){
+    void sendUsage(Player player) {
         player.sendMessage(ChatColor.RED + "/SetItemDrop");
     }
-
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -58,23 +55,17 @@ public class CommandSetItemdrop implements CommandExecutor {
         Double x = floor(playerLocation.getX());
         Double y = floor(playerLocation.getY());
         Double z = floor(playerLocation.getZ());
-        playerLocation = new Location(playerLocation.getWorld(), x,y,z);
+        playerLocation = new Location(playerLocation.getWorld(), x, y, z);
 
 
         configManager.setItemDropLocation(playerLocation);
-
-
-        player.sendMessage("Set Item Drop Location to: [" +
-                playerLocation.getX() + "," + playerLocation.getY() + "," + playerLocation.getZ()+ "]"
-        );
-
+        player.sendMessage("Set Item Drop Location to: [" + playerLocation.getX() + "," + playerLocation.getY() + "," + playerLocation.getZ() + "]");
         return true;
-
     }
 
-    Double floor(Double _double){
-        if(_double <= 0){
-            return Math.ceil(_double) + .5 ;
+    Double floor(Double _double) {
+        if (_double <= 0) {
+            return Math.ceil(_double) + .5;
         }
         return Math.floor(_double) + .5;
     }

@@ -15,9 +15,12 @@ If not, see <https://www.gnu.org/licenses/>.
 package me.zombi42.secretlife.Commands;
 
 import me.zombi42.secretlife.SecretLife;
+import me.zombi42.secretlife.Tasks.SpawnParticleLater;
 import me.zombi42.secretlife.Util.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -96,6 +99,12 @@ public class CommandSecretLife implements CommandExecutor {
                         player.sendMessage(ChatColor.LIGHT_PURPLE + "Zombi42");
                     } else {
                         Bukkit.getLogger().info("SecretLife Plugin V" + secretLife.version + " by Zombi42");
+                    }
+                case "do":
+                    Location location = player.getLocation();
+                    location.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, location.getX(), location.getY(), location.getZ(), 6000, .25, 0.25, 0.25, 20);
+                    for (int i = 40; i < 100; i = i + 10) {
+                        new SpawnParticleLater(location).runTaskLater(secretLife, i);
                     }
             }
         } else if (args.length == 2) {

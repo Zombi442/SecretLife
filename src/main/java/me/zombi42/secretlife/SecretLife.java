@@ -15,8 +15,9 @@ If not, see <https://www.gnu.org/licenses/>.
 package me.zombi42.secretlife;
 
 import me.zombi42.secretlife.Commands.*;
-import me.zombi42.secretlife.Listeners.*;
-import me.zombi42.secretlife.Tasks.SaveConfigTask;
+import me.zombi42.secretlife.Listeners.ButtonPress;
+import me.zombi42.secretlife.Listeners.Damage;
+import me.zombi42.secretlife.Listeners.PlayerDeath;
 import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.Util.DropManager;
 import me.zombi42.secretlife.Util.TeamManager;
@@ -45,7 +46,7 @@ public final class SecretLife extends JavaPlugin {
         new CommandGift(this, configManager);
 
         Bukkit.getServer().getPluginManager().registerEvents(new Damage(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ButtonPress(configManager, dropManager), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ButtonPress(configManager, dropManager, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeath(configManager, teamManager), this);
 
 //        new SaveConfigTask(configManager).runTaskTimer(this, 12000, 12000);

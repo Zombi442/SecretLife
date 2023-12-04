@@ -15,12 +15,13 @@ If not, see <https://www.gnu.org/licenses/>.
 package me.zombi42.secretlife.Listeners;
 
 import me.zombi42.secretlife.Enum.ButtonType;
+import me.zombi42.secretlife.SecretLife;
+import me.zombi42.secretlife.Tasks.DropItemLater;
+import me.zombi42.secretlife.Tasks.SpawnParticleLater;
 import me.zombi42.secretlife.Util.Button;
 import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.Util.DropManager;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.data.type.Switch;
@@ -35,12 +36,14 @@ public class ButtonPress implements Listener {
     ConfigManager configManager;
 
     DropManager dropManager;
+    SecretLife secretLife;
 
-
-    public ButtonPress(ConfigManager configManager, DropManager dropManager) {
+    public ButtonPress(ConfigManager configManager, DropManager dropManager, SecretLife secretLife) {
         this.configManager = configManager;
         this.dropManager = dropManager;
+        this.secretLife = secretLife;
     }
+
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -98,6 +101,7 @@ public class ButtonPress implements Listener {
                 AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                 attribute.setBaseValue(attribute.getBaseValue() + howManyHeartsToGivePlayer);
                 player.setHealth(attribute.getBaseValue());
+                player.sendTitle(ChatColor.GREEN + "+ " + Math.round(howManyHeartsToGivePlayer / 2) + "  Hearts!", "", 20, 40, 2);
                 return;
             }
 
@@ -106,12 +110,21 @@ public class ButtonPress implements Listener {
             extraHearts = 20 - howManyHeartsToGivePlayer;
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
             player.setHealth(60);
-
-
-            for (ItemStack itemStack : dropManager.drop(extraHearts)) {
-                world.dropItemNaturally(configManager.getItemDropLocation(), itemStack);
-
+            if (Math.round(howManyHeartsToGivePlayer / 2) != 0) {
+                player.sendTitle(ChatColor.GREEN + "+ " + Math.round(howManyHeartsToGivePlayer / 2) + "  Hearts!", "", 20, 40, 2);
             }
+
+            Location itemDropLocation = configManager.getItemDropLocation();
+            itemDropLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, itemDropLocation.getX(), itemDropLocation.getY(), itemDropLocation.getZ(), 6000, .25, 0.25, 0.25, 20);
+            for (int i = 40; i < 100; i = i + 10) {
+                new SpawnParticleLater(itemDropLocation).runTaskLater(secretLife, i);
+            }
+            int timeElapsed = 40;
+            for (ItemStack itemStack : dropManager.getItems(extraHearts)) {
+                new DropItemLater(itemStack, itemDropLocation, player).runTaskLater(secretLife, timeElapsed);
+                timeElapsed = timeElapsed + 5;
+            }
+
 
         }
     }
