@@ -52,8 +52,11 @@ public class GiveBook extends BukkitRunnable {
 
         bookMeta.setTitle(player.getDisplayName() + "'s Secret Task");
         bookMeta.setAuthor("Secret Keeper");
+        while(pageContent.length() >= 256){
+            bookMeta.addPage(pageContent.substring(0, 255));
+            pageContent = pageContent.substring(255);
+        }
         bookMeta.addPage(pageContent);
-
 
         writtenBook.setItemMeta(bookMeta);
         player.getInventory().addItem(writtenBook);

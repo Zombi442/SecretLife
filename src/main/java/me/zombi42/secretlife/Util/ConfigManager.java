@@ -108,7 +108,7 @@ public class ConfigManager {
 
     void saveLives() {
         for (String playerName : lives.keySet()) {
-            playerConfig.set("Lives." + playerName, lives.get(playerName));
+            playerConfig.set(playerName + ".lives", lives.get(playerName));
         }
 
         try {
@@ -141,16 +141,18 @@ public class ConfigManager {
         secretConfig = YamlConfiguration.loadConfiguration(secretFile);
         playerConfig = YamlConfiguration.loadConfiguration(playerConfigFile);
 
-        Map<String, Object> map = playerConfig.getConfigurationSection("Lives.").getValues(false);
-        for (String string : map.keySet()) {
-
-            try {
-                this.lives.put(string, Integer.parseInt(String.valueOf(map.get(string))));
-            } catch (NumberFormatException e) {
-                Bukkit.getLogger().warning("Found non integer values in Players.yml");
+        if (playerConfig.getConfigurationSection("") != null) {
+            Map<String, Object> map = playerConfig.getConfigurationSection("").getValues(false);
+            for (String string : map.keySet()) {
+                try {
+                    Bukkit.getLogger().info(string);
+                    Bukkit.getLogger().info(String.valueOf(map.get(string + ".lives")));
+                    this.lives.put(string, Integer.parseInt(String.valueOf(playerConfig.get(string + ".lives"))));
+                } catch (NumberFormatException e) {
+                    Bukkit.getLogger().warning("Found non integer values in Players.yml");
+                }
             }
         }
-
 
 
         Button success = getLocation(ButtonType.Success);

@@ -14,13 +14,11 @@ If not, see <https://www.gnu.org/licenses/>.
  */
 package me.zombi42.secretlife.Commands;
 
-import me.zombi42.secretlife.Enum.TeamEnum;
 import me.zombi42.secretlife.SecretLife;
 import me.zombi42.secretlife.Util.ConfigManager;
 import me.zombi42.secretlife.Util.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -56,6 +54,7 @@ public class CommandSetLives implements CommandExecutor {
                         list.add(player.getName());
                     }
                 } else if (args.length == 2) {
+                    list.add("0");
                     list.add("1");
                     list.add("2");
                     list.add("3");
@@ -72,12 +71,22 @@ public class CommandSetLives implements CommandExecutor {
         if (args.length == 0) {
             return true;
         }
-
-
         Player player = (Player) sender;
 
+        boolean playerNameProvided;
+        if (args.length >= 3 || args.length <= 0) {
+            player.sendMessage(ChatColor.RED + "/setlives [PlayerName] [1-3]");
+            return true;
+        }
+        playerNameProvided = args.length == 2;
 
-        Player target = Bukkit.getPlayer(args[0]);
+        Player target = null;
+        if (playerNameProvided) {
+            target = Bukkit.getPlayer(args[0]);
+        } else {
+            target = player;
+        }
+
         if (target == null) {
             player.sendMessage(ChatColor.RED + "/setlives [PlayerName] [1-3]");
             return true;
@@ -85,29 +94,29 @@ public class CommandSetLives implements CommandExecutor {
 
 
         int lifeValue;
-        try {
-            lifeValue = Integer.parseInt(args[1]);
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "/setlives [PlayerName] [1-3]");
+        if (playerNameProvided) {
+            try {
+                lifeValue = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                player.sendMessage(ChatColor.RED + "/setlives [PlayerName] [1-3]");
+                return true;
+            }
+        }else{
+            try {
+                lifeValue = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                player.sendMessage(ChatColor.RED + "/setlives [PlayerName] [1-3]");
+                return true;
+            }
+        }
+
+        if (lifeValue >= 4 || lifeValue <= -1) {
+            player.sendMessage(ChatColor.RED + "Value must be a number between 0 and 3");
             return true;
         }
 
         configManager.setLives(target, lifeValue);
-        switch (lifeValue) {
-            case 3:
-                teamManager.addPlayerToTeam(player, TeamEnum.Green);
-                break;
-            case 2:
-                teamManager.addPlayerToTeam(player, TeamEnum.Yellow);
-                break;
-            case 1:
-                teamManager.addPlayerToTeam(player, TeamEnum.Red);
-                break;
-            case 0:
-                player.setGameMode(GameMode.SPECTATOR);
-                teamManager.addPlayerToTeam(player, TeamEnum.None);
-                break;
-        }
+        teamManager.addPlayerToTeam(player, lifeValue);
         return true;
     }
 }

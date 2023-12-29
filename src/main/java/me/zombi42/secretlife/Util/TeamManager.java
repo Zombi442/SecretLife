@@ -18,6 +18,9 @@ import me.zombi42.secretlife.Enum.TeamEnum;
 import me.zombi42.secretlife.SecretLife;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -37,15 +40,15 @@ public class TeamManager {
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         board = manager.getMainScoreboard();
-        if(board.getTeam("Green") == null){
+        if (board.getTeam("Green") == null) {
             board.registerNewTeam("Green");
             board.getTeam("Green").setColor(ChatColor.GREEN);
         }
-        if(board.getTeam("Yellow") == null){
+        if (board.getTeam("Yellow") == null) {
             board.registerNewTeam("Yellow");
             board.getTeam("Yellow").setColor(ChatColor.YELLOW);
         }
-        if(board.getTeam("Red") == null){
+        if (board.getTeam("Red") == null) {
             board.registerNewTeam("Red");
             board.getTeam("Red").setColor(ChatColor.RED);
         }
@@ -56,8 +59,8 @@ public class TeamManager {
 
     }
 
-    public void addPlayerToTeam(Player player, TeamEnum teamEnum){
-        switch (teamEnum){
+    public void setPlayersTeam(Player player, TeamEnum teamEnum) {
+        switch (teamEnum) {
             case Green:
                 green.addEntry(player.getName());
                 break;
@@ -72,6 +75,37 @@ public class TeamManager {
                 yellow.removeEntry(player.getName());
                 red.removeEntry(player.getName());
         }
+    }
+
+    public void addPlayerToTeam(Player player, int i, boolean sound, boolean death) {
+        switch (i) {
+            case 3:
+                setPlayersTeam(player, TeamEnum.Green);
+                break;
+            case 2:
+                setPlayersTeam(player, TeamEnum.Yellow);
+                break;
+            case 1:
+                setPlayersTeam(player, TeamEnum.Red);
+                break;
+            case 0:
+                setPlayersTeam(player, TeamEnum.None);
+                if (death) {
+                    player.setGameMode(GameMode.SPECTATOR);
+                    player.getWorld().spawnEntity(player.getLocation(), EntityType.LIGHTNING);
+                }
+                if (sound) {
+                    for (Player player1 : Bukkit.getOnlinePlayers()) {
+                        player1.playSound(player1.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1.2f);
+                    }
+                }
+                break;
+        }
+
+    }
+
+    public void addPlayerToTeam(Player player, int i) {
+        addPlayerToTeam(player, i, false, false);
     }
 
 }

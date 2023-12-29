@@ -41,20 +41,9 @@ public class PlayerDeath implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        configManager.setLives(player, configManager.getLives(player) - 1);
-
-        if (configManager.getLives(player) == 2) {
-            teamManager.addPlayerToTeam(player, TeamEnum.Yellow);
-        } else if (configManager.getLives(player) == 1) {
-            teamManager.addPlayerToTeam(player, TeamEnum.Red);
-        } else if (configManager.getLives(player) == 0) {
-            player.setGameMode(GameMode.SPECTATOR);
-            teamManager.addPlayerToTeam(player, TeamEnum.None);
-            player.getWorld().spawnEntity(player.getLocation(), EntityType.LIGHTNING);
-            for(Player player1 : Bukkit.getOnlinePlayers()){
-                player1.playSound(player1.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,1f, 1.2f);
-            }
-        }
+        int i = configManager.getLives(player) - 1;
+        configManager.setLives(player, i);
+        teamManager.addPlayerToTeam(player, i, true, true);
 
 
     }
@@ -64,7 +53,7 @@ public class PlayerDeath implements Listener {
         Player player = event.getPlayer();
         if (!configManager.livesContainsKey(player)) {
             configManager.setLives(player, 3);
-            teamManager.addPlayerToTeam(player, TeamEnum.Green);
+            teamManager.setPlayersTeam(player, TeamEnum.Green);
             return;
         }
 
@@ -73,17 +62,17 @@ public class PlayerDeath implements Listener {
 
         switch (lives) {
             case 3:
-                teamManager.addPlayerToTeam(player, TeamEnum.Green);
+                teamManager.setPlayersTeam(player, TeamEnum.Green);
                 break;
             case 2:
-                teamManager.addPlayerToTeam(player, TeamEnum.Yellow);
+                teamManager.setPlayersTeam(player, TeamEnum.Yellow);
                 break;
             case 1:
-                teamManager.addPlayerToTeam(player, TeamEnum.Red);
+                teamManager.setPlayersTeam(player, TeamEnum.Red);
                 break;
             case 0:
                 player.setGameMode(GameMode.SPECTATOR);
-                teamManager.addPlayerToTeam(player, TeamEnum.None);
+                teamManager.setPlayersTeam(player, TeamEnum.None);
                 break;
         }
 

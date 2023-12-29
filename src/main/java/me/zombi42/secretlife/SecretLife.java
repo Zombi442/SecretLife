@@ -29,7 +29,7 @@ public final class SecretLife extends JavaPlugin {
     ConfigManager configManager;
     DropManager dropManager;
     TeamManager teamManager;
-    public String version = "0.6";
+    public String version = "0.8";
 
     @Override
     public void onEnable() {
@@ -48,8 +48,6 @@ public final class SecretLife extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new Damage(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ButtonPress(configManager, dropManager, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeath(configManager, teamManager), this);
-
-//        new SaveConfigTask(configManager).runTaskTimer(this, 12000, 12000);
 
     }
 
